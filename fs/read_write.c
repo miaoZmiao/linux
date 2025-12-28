@@ -743,6 +743,15 @@ ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count)
 	return ret;
 }
 
+SYSCALL_DEFINE3(ziya, unsigned int, fd, const char __user *, buf,
+		size_t, count)
+{
+	if (count == 16) {
+        pr_info("ziya syscall triggered with count 16!\n");
+    }
+	return ksys_write(fd, buf, count);
+}
+
 SYSCALL_DEFINE3(write, unsigned int, fd, const char __user *, buf,
 		size_t, count)
 {
