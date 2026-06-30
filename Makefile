@@ -865,6 +865,7 @@ endif # may-sync-config
 endif # need-config
 
 KBUILD_CFLAGS	+= -fno-delete-null-pointer-checks
+subdir-ccflags-y += -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-function
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
 KBUILD_CFLAGS += -O2

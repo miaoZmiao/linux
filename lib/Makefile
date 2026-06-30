@@ -3,6 +3,7 @@
 # Makefile for some libs needed in the kernel.
 #
 
+subdir-ccflags-y += -O0 -Wno-unused-variable
 ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
 
 # Branch profiling isn't noinstr-safe

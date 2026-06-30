@@ -64,11 +64,6 @@
 
 #define _BUG_FLAGS(ins, flags, extra)					\
 do {									\
-	asm_inline volatile(_BUG_FLAGS_ASM(ins, "%c0",			\
-					   "%c1", "%c2", "%c3", extra)	\
-		     : : "i" (__FILE__), "i" (__LINE__),		\
-			 "i" (flags),					\
-			 "i" (sizeof(struct bug_entry)));		\
 } while (0)
 
 #define ARCH_WARN_ASM(file, line, flags, size)				\
@@ -99,7 +94,7 @@ do {								\
 
 #define __WARN_FLAGS(flags)					\
 do {								\
-	__auto_type __flags = BUGFLAG_WARNING|(flags);		\
+	__auto_type __attribute__((unused)) __flags = BUGFLAG_WARNING|(flags);		\
 	instrumentation_begin();				\
 	_BUG_FLAGS(ASM_UD2, __flags, ARCH_WARN_REACHABLE);	\
 	instrumentation_end();					\
