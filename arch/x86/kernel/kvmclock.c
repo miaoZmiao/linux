@@ -28,6 +28,13 @@ static int msr_kvm_system_time __ro_after_init;
 static int msr_kvm_wall_clock __ro_after_init;
 static u64 kvm_sched_clock_offset __ro_after_init;
 
+#ifdef CONFIG_BUILD_O0
+#ifdef CONFIG_PARAVIRT_CLOCK
+/* 专门拯救 -O0 下无法通过死代码消除被抹去的隐藏变量引用 */
+struct pvclock_vsyscall_time_info pvclock_page __attribute__((visibility("hidden")));
+#endif
+#endif
+
 static int __init parse_no_kvmclock(char *arg)
 {
 	kvmclock = 0;

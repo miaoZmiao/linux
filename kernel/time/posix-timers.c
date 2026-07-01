@@ -800,6 +800,8 @@ SYSCALL_DEFINE1(timer_getoverrun, timer_t, timer_id)
 {
 	scoped_timer_get_or_fail(timer_id)
 		return timer_overrun_to_int(scoped_timer);
+	/* 专门为了治住 -O0 下 GCC 睁眼瞎的假警报 */
+	return -EINVAL;
 }
 
 static void common_hrtimer_arm(struct k_itimer *timr, ktime_t expires,
