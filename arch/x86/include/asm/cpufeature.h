@@ -98,6 +98,10 @@ void check_cpufeature_deps(struct cpuinfo_x86 *c);
  */
 static __always_inline bool _static_cpu_has(u16 bit)
 {
+#ifdef CONFIG_BUILD_O0
+	/* 真正卡住 kernel/ 目录下 -O0 编译的其实是 x86 的这个地方 */
+	return boot_cpu_has(bit);
+#else
 	asm goto(ALTERNATIVE_TERNARY("jmp 6f", %c[feature], "", "jmp %l[t_no]")
 		".pushsection .altinstr_aux,\"ax\"\n"
 		"6:\n"
@@ -113,6 +117,7 @@ t_yes:
 	return true;
 t_no:
 	return false;
+#endif
 }
 
 #define static_cpu_has(bit)					\

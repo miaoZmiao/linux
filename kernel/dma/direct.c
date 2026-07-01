@@ -200,6 +200,13 @@ static void *dma_direct_alloc_no_mapping(struct device *dev, size_t size,
 	return page;
 }
 
+
+#ifdef CONFIG_BUILD_O0
+void *arch_dma_set_uncached(void *addr, size_t size) {
+	return NULL;
+}
+#endif
+
 void *dma_direct_alloc(struct device *dev, size_t size,
 		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
 {

@@ -5865,6 +5865,13 @@ errout_free:
 
 extern char __start_BTF[];
 extern char __stop_BTF[];
+
+/* 专门为了治住 -O0 下没有死代码消除导致的链接报错 */
+#ifdef CONFIG_BUILD_O0
+char __start_BTF[1] = {0};
+char __stop_BTF[1] = {0};
+#endif
+
 extern struct btf *btf_vmlinux;
 
 #define BPF_MAP_TYPE(_id, _ops)

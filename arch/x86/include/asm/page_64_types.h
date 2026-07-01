@@ -12,13 +12,23 @@
 #define KASAN_STACK_ORDER 0
 #endif
 
-#define THREAD_SIZE_ORDER	(2 + KASAN_STACK_ORDER)
+/* 专门为 -O0 无优化编译准备的栈增量：开启时额外加 1 (容量翻倍)，关闭时为 0 */
+#ifdef CONFIG_BUILD_O0
+#define O0_STACK_ORDER    2
+#else
+#define O0_STACK_ORDER    0
+#endif
+
+/* 1. 进程内核栈：默认 16KB -> -O0 时变为 32KB (若开了 KASAN 则叠加到 64KB) */
+#define THREAD_SIZE_ORDER	(2 + KASAN_STACK_ORDER + O0_STACK_ORDER)
 #define THREAD_SIZE  (PAGE_SIZE << THREAD_SIZE_ORDER)
 
-#define EXCEPTION_STACK_ORDER (1 + KASAN_STACK_ORDER)
+/* 2. 异常栈：默认 8KB -> -O0 时变为 16KB */
+#define EXCEPTION_STACK_ORDER (1 + KASAN_STACK_ORDER + O0_STACK_ORDER)
 #define EXCEPTION_STKSZ (PAGE_SIZE << EXCEPTION_STACK_ORDER)
 
-#define IRQ_STACK_ORDER (2 + KASAN_STACK_ORDER)
+/* 3. 中断栈：默认 16KB -> -O0 时变为 32KB */
+#define IRQ_STACK_ORDER (2 + KASAN_STACK_ORDER + O0_STACK_ORDER)
 #define IRQ_STACK_SIZE (PAGE_SIZE << IRQ_STACK_ORDER)
 
 /*
