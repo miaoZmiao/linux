@@ -3,6 +3,8 @@
 # Makefile for the linux memory manager.
 #
 
+subdir-ccflags-y += -O0
+
 KASAN_SANITIZE_slab_common.o := n
 KASAN_SANITIZE_slub.o := n
 KASAN_SANITIZE_kmemleak.o := n

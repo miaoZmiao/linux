@@ -237,10 +237,22 @@ static int vmap_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
 	return 0;
 }
 
+#ifdef CONFIG_BUILD_O0
+/* 专门拯救 mm/vmalloc.c 在 -O0 下无法被优化掉的 p4d 大页释放死代码 */
+int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
+{
+	return 0;
+}
+#endif
+
 static int vmap_try_huge_p4d(p4d_t *p4d, unsigned long addr, unsigned long end,
 			phys_addr_t phys_addr, pgprot_t prot,
 			unsigned int max_page_shift)
 {
+#ifdef CONFIG_BUILD_O0
+	/* 在 -O0 下直接关闭 P4D 级别大页尝试，完美绕过未定义的 p4d_free_pud_page 符号 */
+	return 0; 
+#endif
 	if (max_page_shift < P4D_SHIFT)
 		return 0;
 
