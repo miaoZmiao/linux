@@ -197,6 +197,9 @@ static inline int folio_precise_page_mapcount(struct folio *folio,
 		struct page *page)
 {
 	BUILD_BUG();
+#ifdef CONFIG_BUILD_O0
+	return 0; /* 专门平息 -O0 下 GCC 无法识别不可达路径的分支报警 */
+#endif
 }
 #endif /* CONFIG_PAGE_MAPCOUNT */
 
